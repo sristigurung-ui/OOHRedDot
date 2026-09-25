@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTS UAE — Key Billboards + Metro Platforms</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  #header { padding: 14px 24px 10px; background: #fff; border-bottom: 1px solid #e5e5e5; flex-shrink: 0; }
+  #header h1 { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  #header p { font-size: 11px; color: #999; margin-top: 2px; }
+  #main { display: flex; flex: 1; overflow: hidden; }
+  #map { flex: 1; height: 100%; }
+  #sidebar { width: 290px; height: 100%; overflow-y: auto; background: #f7f7f7; border-left: 1px solid #e5e5e5; flex-shrink: 0; }
+  #sidebar-header { padding: 14px 16px 10px; background: #fff; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 10; }
+  #sidebar-header h2 { font-size: 12px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.04em; }
+  .group-title { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.04em; padding: 12px 16px 4px; }
+  .card { background: #fff; margin: 6px 10px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: box-shadow 0.15s, transform 0.15s; border: 2px solid transparent; padding: 10px 12px; cursor: pointer; }
+  .card:hover, .card.active { box-shadow: 0 4px 14px rgba(0,0,0,0.16); transform: translateY(-1px); }
+  .card-name { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+  .card-detail { font-size: 11px; color: #888; }
+  #legend { position: absolute; bottom: 24px; left: 24px; z-index: 1000; background: #fff; border-radius: 10px; padding: 12px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
+  #legend h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; font-weight: 700; margin-bottom: 8px; }
+  .leg-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #333; font-weight: 500; margin-bottom: 6px; }
+  .leg-row:last-child { margin-bottom: 0; }
+  .leaflet-popup-content-wrapper { display: none; }
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>TTS UAE — Key Billboards &amp; Metro Platforms</h1>
+  <p>3 big anchor billboards (Etihad Rd, SZR North, Al Khail Rd South) + 5 priority metro platforms</p>
+</div>
+<div id="main">
+  <div id="map"></div>
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h2>Locations</h2>
+    </div>
+    <div id="cards"></div>
+  </div>
+</div>
+<div id="legend">
+  <h3>Legend</h3>
+  <div class="leg-row"><div style="font-size:20px;line-height:1;">★</div>Big anchor billboard</div>
+  <div class="leg-row"><div style="width:12px;height:12px;border-radius:50%;background:#378ADD;"></div>Metro platform</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map', { zoomControl: true }).setView([25.18, 55.30], 10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 19
+}).addTo(map);
+
+function starIcon() {
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#DC2626;text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 5px rgba(0,0,0,0.4);">★</div>`,
+    iconSize: [34,34], iconAnchor: [17,17]
+  });
+}
+function dotIcon() {
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:14px;height:14px;border-radius:50%;background:#378ADD;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`,
+    iconSize: [16,16], iconAnchor: [8,8]
+  });
+}
+
+const billboards = [
+  { lat: 25.32, lng: 55.42, name: "Big Billboard — Etihad Road", detail: "Leading to/from Sharjah · Large-format anchor" },
+  { lat: 25.227, lng: 55.296, name: "Big Billboard — SZR (North Dubai)", detail: "Near WTC/Downtown · Large-format anchor" },
+  { lat: 24.995, lng: 55.105, name: "Big Billboard — Al Khail Rd (South)", detail: "Balances coverage toward Jebel Ali / South Dubai" },
+];
+
+const metroPlatforms = [
+  { lat: 25.27, lng: 55.33, name: "Al Rigga Metro Platform", detail: "Deira · Busiest outbound station in Dubai" },
+  { lat: 25.287, lng: 55.345, name: "Abu Hail Metro Platform", detail: "Deira" },
+  { lat: 25.2532, lng: 55.302, name: "ADCB Metro Platform", detail: "Karama" },
+  { lat: 25.2547, lng: 55.305, name: "BurJuman Metro Platform", detail: "Bur Dubai/Satwa · Major interchange" },
+  { lat: 25.1865, lng: 55.2615, name: "Business Bay Metro Platform", detail: "Workplace destination" },
+];
+
+const cardsEl = document.getElementById('cards');
+
+function addGroupTitle(title) {
+  const div = document.createElement('div');
+  div.className = 'group-title';
+  div.textContent = title;
+  cardsEl.appendChild(div);
+}
+
+function addCard(item, marker) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<div class="card-name">${item.name}</div><div class="card-detail">${item.detail}</div>`;
+  card.addEventListener('click', () => map.flyTo([item.lat, item.lng], 14, { duration: 1 }));
+  cardsEl.appendChild(card);
+}
+
+addGroupTitle('★ Big Anchor Billboards (3)');
+billboards.forEach(b => {
+  const marker = L.marker([b.lat, b.lng], { icon: starIcon() }).addTo(map)
+    .bindTooltip(`<b>${b.name}</b><br>${b.detail}`, { direction: 'top', offset: [0,-18] });
+  addCard(b, marker);
+});
+
+addGroupTitle('Metro Platforms (5)');
+metroPlatforms.forEach(m => {
+  const marker = L.marker([m.lat, m.lng], { icon: dotIcon() }).addTo(map)
+    .bindTooltip(`<b>${m.name}</b><br>${m.detail}`, { direction: 'top', offset: [0,-10] });
+  addCard(m, marker);
+});
+</script>
+</body>
+</html>
