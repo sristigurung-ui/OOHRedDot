@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTS UAE — Key Billboards + Metro Platforms</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TTS UAE — Final Placement Selection Map</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -13,7 +13,7 @@
   #header p { font-size: 11px; color: #999; margin-top: 2px; }
   #main { display: flex; flex: 1; overflow: hidden; }
   #map { flex: 1; height: 100%; }
-  #sidebar { width: 290px; height: 100%; overflow-y: auto; background: #f7f7f7; border-left: 1px solid #e5e5e5; flex-shrink: 0; }
+  #sidebar { width: 310px; height: 100%; overflow-y: auto; background: #f7f7f7; border-left: 1px solid #e5e5e5; flex-shrink: 0; }
   #sidebar-header { padding: 14px 16px 10px; background: #fff; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 10; }
   #sidebar-header h2 { font-size: 12px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.04em; }
   .group-title { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.04em; padding: 12px 16px 4px; }
@@ -21,6 +21,7 @@
   .card:hover, .card.active { box-shadow: 0 4px 14px rgba(0,0,0,0.16); transform: translateY(-1px); }
   .card-name { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
   .card-detail { font-size: 11px; color: #888; }
+  .card-cost { font-size: 11px; color: #444; font-weight: 600; margin-top: 4px; }
   #legend { position: absolute; bottom: 24px; left: 24px; z-index: 1000; background: #fff; border-radius: 10px; padding: 12px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
   #legend h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; font-weight: 700; margin-bottom: 8px; }
   .leg-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #333; font-weight: 500; margin-bottom: 6px; }
@@ -30,60 +31,122 @@
 </head>
 <body>
 <div id="header">
-  <h1>TTS UAE — Key Billboards &amp; Metro Platforms</h1>
-  <p>3 big anchor billboards (Etihad Rd, SZR North, Al Khail Rd South) + 5 priority metro platforms</p>
+  <h1>TTS UAE — Final Placement Selection</h1>
+  <p>Big stars = Hoardings &amp; Metro · Small dots = Unipoles, Bus Shelters, Lampposts &amp; Megacoms</p>
 </div>
 <div id="main">
   <div id="map"></div>
   <div id="sidebar">
     <div id="sidebar-header">
-      <h2>Locations</h2>
+      <h2>All Locations</h2>
     </div>
     <div id="cards"></div>
   </div>
 </div>
 <div id="legend">
   <h3>Legend</h3>
-  <div class="leg-row"><div style="font-size:20px;line-height:1;">★</div>Big anchor billboard</div>
-  <div class="leg-row"><div style="width:12px;height:12px;border-radius:50%;background:#378ADD;"></div>Metro platform</div>
+  <div class="leg-row"><span style="color:#DC2626;font-size:18px;">★</span> Hoarding / Billboard (big)</div>
+  <div class="leg-row"><span style="color:#16A34A;font-size:18px;">★</span> Metro network + platform (big)</div>
+  <div class="leg-row"><div style="display:flex;gap:2px;"><div style="width:8px;height:10px;border-radius:50%;background:#FDE047;"></div><div style="width:8px;height:10px;border-radius:50%;background:#EAB308;"></div><div style="width:8px;height:10px;border-radius:50%;background:#A16207;"></div><div style="width:8px;height:10px;border-radius:50%;background:#713F12;"></div></div> Unipole (small, shade = individual pole)</div>
+  <div class="leg-row"><div style="width:10px;height:10px;border-radius:50%;background:#2563EB;"></div> Bus Shelter (small)</div>
+  <div class="leg-row"><div style="width:10px;height:10px;border-radius:50%;background:#F97316;"></div> Lamppost / Megacom (small)</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const map = L.map('map', { zoomControl: true }).setView([25.18, 55.30], 10);
+const map = L.map('map', { zoomControl: true }).setView([25.15, 55.30], 9);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   maxZoom: 19
 }).addTo(map);
 
-function starIcon() {
+const RED = '#DC2626', GREEN = '#16A34A', BLUE = '#2563EB', ORANGE = '#F97316';
+// Unipoles: each individual pole gets its own shade of yellow (same hue family, distinct lightness)
+const YEL_50 = '#FFFBEB', YEL_100 = '#FEF9C3', YEL_200 = '#FEF08A', YEL_300 = '#FDE047', YEL_400 = '#FACC15', YEL_500 = '#EAB308', YEL_600 = '#CA8A04', YEL_700 = '#A16207', YEL_800 = '#854D0E', YEL_900 = '#713F12';
+
+function starIcon(color, size) {
   return L.divIcon({
     className: '',
-    html: `<div style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#DC2626;text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 5px rgba(0,0,0,0.4);">★</div>`,
-    iconSize: [34,34], iconAnchor: [17,17]
+    html: `<div style="width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-size:${size-6}px;color:${color};text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 5px rgba(0,0,0,0.4);">★</div>`,
+    iconSize: [size,size], iconAnchor: [size/2,size/2]
   });
 }
-function dotIcon() {
+function dotIcon(color, size) {
   return L.divIcon({
     className: '',
-    html: `<div style="width:14px;height:14px;border-radius:50%;background:#378ADD;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`,
-    iconSize: [16,16], iconAnchor: [8,8]
+    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:1.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>`,
+    iconSize: [size,size], iconAnchor: [size/2,size/2]
   });
 }
 
-const billboards = [
-  { lat: 25.32, lng: 55.42, name: "Big Billboard — Etihad Road", detail: "Leading to/from Sharjah · Large-format anchor" },
-  { lat: 25.227, lng: 55.296, name: "Big Billboard — SZR (North Dubai)", detail: "Near WTC/Downtown · Large-format anchor" },
-  { lat: 24.995, lng: 55.105, name: "Big Billboard — Al Khail Rd (South)", detail: "Balances coverage toward Jebel Ali / South Dubai" },
+// [lat, lng, name, detail, cost, color, group, big]
+const places = [
+  // HOARDINGS / BILLBOARDS (BIG)
+  { lat: 25.2106, lng: 55.2764, name: "Static Backlit Hoarding — DIFC", detail: "60M x 10M · 1 face", cost: "AED 528,000", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.2020, lng: 55.2600, name: "Static Backlit Hoarding — Wellington, SZR", detail: "60M x 15M · 1 face", cost: "AED 638,000", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.3200, lng: 55.4200, name: "Static Frontlit Hoarding — Sharjah, Etihad Road", detail: "50M x 13M · 1 face", cost: "AED 281,072", color: RED, group: "Hoardings / Billboards", big: true },
+
+  // UNIPOLES (small) — shades of YELLOW, one shade per individual pole/cluster
+  { lat: 25.1800, lng: 55.2710, name: "Digital Unipole 1 — Al Khail Rd (nr. Business Bay towers)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,010 (shared)", color: YEL_300, group: "Unipoles", big: false },
+  { lat: 25.1770, lng: 55.2690, name: "Digital Unipole 2 — Al Khail Rd (nr. E44 interchange)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,010 (shared)", color: YEL_400, group: "Unipoles", big: false },
+  { lat: 25.1720, lng: 55.2670, name: "Digital Unipole 3 — Al Khail Rd (nr. Meydan STP / Miele)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,010 (shared)", color: YEL_500, group: "Unipoles", big: false },
+  { lat: 25.2230, lng: 55.2835, name: "Digital Unipole — Sheikh Zayed Rd (WTC Roundabout ↔ IC#1)", detail: "Approx. location, nr. Conrad Dubai / Eve Lounge · verify exact GPS", cost: "TBC", color: YEL_600, group: "Unipoles", big: false },
+  { lat: 25.2115, lng: 55.2775, name: "Digital Unipole — Sheikh Zayed Rd (before Dubai Mall / City Walk exit)", detail: "Approx. location, nr. DIFC / Shangri-La Dubai · verify exact GPS", cost: "TBC", color: YEL_200, group: "Unipoles", big: false },
+  { lat: 25.1330, lng: 55.2245, name: "Digital Unipole — Sheikh Zayed Rd (nr. Al Quoz, Oasis Mall / TYREPLUS)", detail: "Approx. location, between IC#2 and IC#3 · verify exact GPS", cost: "TBC", color: YEL_100, group: "Unipoles", big: false },
+  { lat: 25.1595, lng: 55.2205, name: "Digital Unipole — Sheikh Zayed Rd (nr. Al Manara / Nissan Service Centre)", detail: "Approx. location, between IC#2 and IC#3 · verify exact GPS", cost: "TBC", color: YEL_50, group: "Unipoles", big: false },
+  { lat: 25.1500, lng: 55.2250, name: "Digital Unipoles — Across Dubai", detail: "Multiple · 12 poles / 24 faces", cost: "AED 550,000", color: YEL_700, group: "Unipoles", big: false },
+  { lat: 25.4052, lng: 55.5304, name: "Static Backlit Unipole — Ajman, E311", detail: "12M x 6M · 2 faces", cost: "AED 110,000", color: YEL_800, group: "Unipoles", big: false },
+  { lat: 25.7895, lng: 55.9432, name: "Static Backlit Unipole — Ras Al Khaimah", detail: "12M x 6M · 2 faces", cost: "TBC", color: YEL_900, group: "Unipoles", big: false },
+
+  // METRO NETWORK (BIG) + PLATFORM STATIONS (BIG)
+  { lat: 25.2500, lng: 55.3000, name: "Metro Digital Network — Across Dubai", detail: "53 stations / 551 screens", cost: "AED 350,900", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2532, lng: 55.3020, name: "Metro Platform — ADCB (Karama)", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2610, lng: 55.3120, name: "Metro Platform — Sharaf DG", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2690, lng: 55.3008, name: "Metro Platform — Union", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2547, lng: 55.3050, name: "Metro Platform — BurJuman (Bur Dubai/Satwa)", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2870, lng: 55.3450, name: "Metro Platform — Abu Hail (Deira)", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2400, lng: 55.3200, name: "Metro Platform — DCC", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.1865, lng: 55.2615, name: "Metro Platform — Business Bay", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.0390, lng: 55.1444, name: "Metro Platform — Discovery Gardens", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+
+  // BUS SHELTERS (small)
+  { lat: 25.2750, lng: 55.3280, name: "Bus Shelter 13 — Port Saeed Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
+  { lat: 25.2880, lng: 55.3460, name: "Bus Shelter 398 — Abu Hail Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
+  { lat: 25.2820, lng: 55.3350, name: "Bus Shelter 895 — Manama 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
+  { lat: 25.2540, lng: 55.3040, name: "Bus Shelter 250 — Karama 2 (Karama)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
+  { lat: 25.2500, lng: 55.2980, name: "Bus Shelter 95 — Saeediya School 2 (Karama)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
+  { lat: 25.2600, lng: 55.2900, name: "Bus Shelter 904 — Mankhool, Street 7 (Bur Dubai)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
+
+  // LAMPPOSTS / MEGACOMS (small) — ORANGE
+  { lat: 24.3450, lng: 54.5000, name: "Backlit Lampposts — Abu Dhabi, Mussafah", detail: "1.519M x 3.025M · 9 poles / 18 faces", cost: "AED 75,438", color: ORANGE, group: "Lampposts / Megacoms", big: false },
+  { lat: 25.3573, lng: 55.3900, name: "Digital Megacoms — Sharjah, Corniche", detail: "W360xH270px · 6 screens / 12 faces", cost: "AED 81,972", color: ORANGE, group: "Lampposts / Megacoms", big: false },
 ];
 
-const metroPlatforms = [
-  { lat: 25.27, lng: 55.33, name: "Al Rigga Metro Platform", detail: "Deira · Busiest outbound station in Dubai" },
-  { lat: 25.287, lng: 55.345, name: "Abu Hail Metro Platform", detail: "Deira" },
-  { lat: 25.2532, lng: 55.302, name: "ADCB Metro Platform", detail: "Karama" },
-  { lat: 25.2547, lng: 55.305, name: "BurJuman Metro Platform", detail: "Bur Dubai/Satwa · Major interchange" },
-  { lat: 25.1865, lng: 55.2615, name: "Business Bay Metro Platform", detail: "Workplace destination" },
+// 103 individual Digital Megacom locations (illustrative spread across Dubai - exact coordinates TBC from Red Dot)
+const megacomCodes = [
+"DXB-MZ-001","DXB-MZ-002","DXB-MZ-003","DXB-MZ-005","DXB-MZ-006","DXB-MZ-009","DXB-MZ-014","DXB-MZ-015","DXB-MZ-022","DXB-MZ-028",
+"DXB-MZ-029","DXB-MZ-036","DXB-MZ-040","DXB-MZ-041","DXB-MZ-044","DXB-MZ-046","DXB-MZ-047","DXB-MZ-050","DXB-MZ-051","DXB-MZ-054",
+"DXB-MZ-055","DXB-MZ-063","DXB-MZ-069","DXB-MZ-070","DXB-MZ-073","DXB-MZ-074","DXB-MZ-075","DXB-MZ-076","DXB-MZ-079","DXB-MZ-080",
+"DXB-MZ-081","DXB-MZ-083","DXB-MZ-084","DXB-MZ-095","DXB-MZ-096","DXB-MZ-101",
+"DXB-MZ-008","DXB-MZ-010","DXB-MZ-011","DXB-MZ-016","DXB-MZ-017","DXB-MZ-019","DXB-MZ-020","DXB-MZ-021","DXB-MZ-024","DXB-MZ-025",
+"DXB-MZ-026","DXB-MZ-027","DXB-MZ-033","DXB-MZ-034","DXB-MZ-035","DXB-MZ-038","DXB-MZ-042","DXB-MZ-045","DXB-MZ-048","DXB-MZ-049",
+"DXB-MZ-053","DXB-MZ-059","DXB-MZ-060","DXB-MZ-061","DXB-MZ-062","DXB-MZ-064","DXB-MZ-065","DXB-MZ-066","DXB-MZ-071","DXB-MZ-072",
+"DXB-MZ-088","DXB-MZ-089","DXB-MZ-091","DXB-MZ-092","DXB-MZ-093",
+"DXB-MZ-004","DXB-MZ-007","DXB-MZ-012","DXB-MZ-013","DXB-MZ-018","DXB-MZ-031","DXB-MZ-032","DXB-MZ-037","DXB-MZ-039","DXB-MZ-043",
+"DXB-MZ-052","DXB-MZ-056","DXB-MZ-057","DXB-MZ-058","DXB-MZ-067","DXB-MZ-068","DXB-MZ-078","DXB-MZ-085","DXB-MZ-086","DXB-MZ-087",
+"DXB-MZ-098","DXB-MZ-099","DXB-MZ-100","DXB-MZ-103","DXB-MZ-104","DXB-MZ-107","DXB-MZ-108","DXB-MZ-109","DXB-MZ-110","DXB-MZ-113","DXB-MZ-114",
 ];
+
+const dubaiBounds = { latMin: 24.95, latMax: 25.35, lngMin: 55.05, lngMax: 55.45 };
+function seededRandom(seed) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+megacomCodes.forEach((code, i) => {
+  const lat = dubaiBounds.latMin + seededRandom(i * 12.9898) * (dubaiBounds.latMax - dubaiBounds.latMin);
+  const lng = dubaiBounds.lngMin + seededRandom(i * 78.233) * (dubaiBounds.lngMax - dubaiBounds.lngMin);
+  places.push({ lat, lng, name: `Digital Megacom — ${code}`, detail: "2.7M x 4M · illustrative location, TBC from Red Dot", cost: "part of AED 704,718 (60 faces) / AED 1,409,436 (120 faces)", color: ORANGE, group: "Lampposts / Megacoms", big: false });
+});
 
 const cardsEl = document.getElementById('cards');
 
@@ -97,23 +160,29 @@ function addGroupTitle(title) {
 function addCard(item, marker) {
   const card = document.createElement('div');
   card.className = 'card';
-  card.innerHTML = `<div class="card-name">${item.name}</div><div class="card-detail">${item.detail}</div>`;
-  card.addEventListener('click', () => map.flyTo([item.lat, item.lng], 14, { duration: 1 }));
+  card.innerHTML = `<div class="card-name">${item.name}</div><div class="card-detail">${item.detail}</div><div class="card-cost">💰 ${item.cost}</div>`;
+  card.addEventListener('click', () => map.flyTo([item.lat, item.lng], 13, { duration: 1 }));
+  card.addEventListener('mouseenter', () => card.classList.add('active'));
+  card.addEventListener('mouseleave', () => card.classList.remove('active'));
   cardsEl.appendChild(card);
 }
 
-addGroupTitle('★ Big Anchor Billboards (3)');
-billboards.forEach(b => {
-  const marker = L.marker([b.lat, b.lng], { icon: starIcon() }).addTo(map)
-    .bindTooltip(`<b>${b.name}</b><br>${b.detail}`, { direction: 'top', offset: [0,-18] });
-  addCard(b, marker);
-});
-
-addGroupTitle('Metro Platforms (5)');
-metroPlatforms.forEach(m => {
-  const marker = L.marker([m.lat, m.lng], { icon: dotIcon() }).addTo(map)
-    .bindTooltip(`<b>${m.name}</b><br>${m.detail}`, { direction: 'top', offset: [0,-10] });
-  addCard(m, marker);
+const groups = ["Hoardings / Billboards", "Metro", "Unipoles", "Bus Shelters", "Lampposts / Megacoms"];
+groups.forEach(g => {
+  const groupPlaces = places.filter(p => p.group === g);
+  if (groupPlaces.length === 0) return;
+  addGroupTitle(`${g} (${groupPlaces.length})`);
+  groupPlaces.forEach(item => {
+    let marker;
+    if (item.big) {
+      const size = item.name.includes("Network") ? 34 : 28;
+      marker = L.marker([item.lat, item.lng], { icon: starIcon(item.color, size) }).addTo(map);
+    } else {
+      marker = L.marker([item.lat, item.lng], { icon: dotIcon(item.color, 10) }).addTo(map);
+    }
+    marker.bindTooltip(`<b>${item.name}</b><br>${item.detail}<br>${item.cost}`, { direction: 'top', offset: [0,-14] });
+    addCard(item, marker);
+  });
 });
 </script>
 </body>
