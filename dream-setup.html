@@ -137,14 +137,37 @@ const megacomCodes = [
 "DXB-MZ-098","DXB-MZ-099","DXB-MZ-100","DXB-MZ-103","DXB-MZ-104","DXB-MZ-107","DXB-MZ-108","DXB-MZ-109","DXB-MZ-110","DXB-MZ-113","DXB-MZ-114",
 ];
 
-const dubaiBounds = { latMin: 24.95, latMax: 25.35, lngMin: 55.05, lngMax: 55.45 };
+// Land-based district anchors across mainland Dubai (avoids the Gulf, Dubai Creek, Palm/World Islands)
+const landAnchors = [
+  { lat: 25.2650, lng: 55.3300 }, // Deira
+  { lat: 25.2600, lng: 55.3000 }, // Bur Dubai
+  { lat: 25.2500, lng: 55.3050 }, // Karama
+  { lat: 25.1850, lng: 55.2650 }, // Business Bay
+  { lat: 25.1950, lng: 55.2750 }, // Downtown Dubai
+  { lat: 25.1400, lng: 55.2300 }, // Al Quoz
+  { lat: 25.1100, lng: 55.2050 }, // Al Barsha
+  { lat: 25.0700, lng: 55.1450 }, // JLT
+  { lat: 25.0800, lng: 55.1420 }, // Dubai Marina
+  { lat: 25.2850, lng: 55.3800 }, // Al Qusais
+  { lat: 25.1650, lng: 55.4050 }, // International City
+  { lat: 25.2950, lng: 55.3600 }, // Al Nahda
+  { lat: 25.2150, lng: 55.4200 }, // Mirdif
+  { lat: 25.0100, lng: 55.1200 }, // Jebel Ali
+  { lat: 25.0400, lng: 55.1450 }, // Discovery Gardens
+  { lat: 25.1900, lng: 55.4150 }, // Al Warqa
+  { lat: 25.1250, lng: 55.3800 }, // Silicon Oasis
+  { lat: 25.0500, lng: 55.2400 }, // Motor City
+];
 function seededRandom(seed) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
 megacomCodes.forEach((code, i) => {
-  const lat = dubaiBounds.latMin + seededRandom(i * 12.9898) * (dubaiBounds.latMax - dubaiBounds.latMin);
-  const lng = dubaiBounds.lngMin + seededRandom(i * 78.233) * (dubaiBounds.lngMax - dubaiBounds.lngMin);
+  const anchor = landAnchors[i % landAnchors.length];
+  const jitterLat = (seededRandom(i * 12.9898) - 0.5) * 0.02;   // ~ ±1.1km
+  const jitterLng = (seededRandom(i * 78.233) - 0.5) * 0.02;    // ~ ±1km
+  const lat = anchor.lat + jitterLat;
+  const lng = anchor.lng + jitterLng;
   places.push({ lat, lng, name: `Digital Megacom — ${code}`, detail: "2.7M x 4M · illustrative location, TBC from Red Dot", cost: "part of AED 704,718 (60 faces) / AED 1,409,436 (120 faces)", color: ORANGE, group: "Lampposts / Megacoms", big: false });
 });
 
