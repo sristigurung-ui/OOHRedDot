@@ -46,9 +46,10 @@
 <div id="legend">
   <h3>Legend</h3>
   <div class="leg-row"><span style="color:#DC2626;font-size:18px;">★</span> Hoarding / Billboard (big)</div>
-  <div class="leg-row"><span style="color:#16A34A;font-size:18px;">★</span> Metro network + platform (big)</div>
+  <div class="leg-row"><span style="color:#16A34A;font-size:18px;">★</span> Metro Digital Network (big star)</div>
+  <div class="leg-row"><div style="width:10px;height:10px;border-radius:50%;background:#16A34A;"></div> Metro Platform (small dot)</div>
   <div class="leg-row"><div style="display:flex;gap:2px;"><div style="width:8px;height:10px;border-radius:50%;background:#FDE047;"></div><div style="width:8px;height:10px;border-radius:50%;background:#EAB308;"></div><div style="width:8px;height:10px;border-radius:50%;background:#A16207;"></div><div style="width:8px;height:10px;border-radius:50%;background:#713F12;"></div></div> Unipole (small, shade = individual pole)</div>
-  <div class="leg-row"><div style="width:10px;height:10px;border-radius:50%;background:#2563EB;"></div> Bus Shelter (small)</div>
+  <div class="leg-row"><span style="color:#2563EB;font-size:14px;">★</span> Bus Shelter (small star)</div>
   <div class="leg-row"><div style="width:10px;height:10px;border-radius:50%;background:#F97316;"></div> Lamppost / Megacom (small)</div>
 </div>
 
@@ -62,7 +63,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const RED = '#DC2626', GREEN = '#16A34A', BLUE = '#2563EB', ORANGE = '#F97316';
 // Unipoles: each individual pole gets its own shade of yellow (same hue family, distinct lightness)
-const YEL_50 = '#FFFBEB', YEL_100 = '#FEF9C3', YEL_200 = '#FEF08A', YEL_300 = '#FDE047', YEL_400 = '#FACC15', YEL_500 = '#EAB308', YEL_600 = '#CA8A04', YEL_700 = '#A16207', YEL_800 = '#854D0E', YEL_900 = '#713F12';
+const YEL_50 = '#FFFBEB', YEL_100 = '#FEF9C3', YEL_200 = '#FEF08A', YEL_300 = '#FDE047', YEL_400 = '#FACC15', YEL_500 = '#EAB308', YEL_600 = '#CA8A04', YEL_700 = '#A16207', YEL_800 = '#854D0E', YEL_900 = '#713F12', YEL_MUSTARD = '#D4A017', YEL_OLIVE = '#BFA000', YEL_GOLD = '#E6B800', YEL_AMBER = '#C99700', YEL_SAND = '#B8860B', YEL_HONEY = '#DAA520', YEL_BRASS = '#B8912A', YEL_OCHRE = '#CC9A06', YEL_STRAW = '#D9C24B', YEL_WHEAT = '#C2A138', YEL_SAFFRON = '#E0B33C', YEL_DESERT = '#C4A24F';
 
 function starIcon(color, size) {
   return L.divIcon({
@@ -82,32 +83,37 @@ function dotIcon(color, size) {
 // [lat, lng, name, detail, cost, color, group, big]
 const places = [
   // HOARDINGS / BILLBOARDS (BIG)
-  { lat: 25.2106, lng: 55.2764, name: "Static Backlit Hoarding — DIFC", detail: "60M x 10M · 1 face", cost: "AED 528,000", color: RED, group: "Hoardings / Billboards", big: true },
-  { lat: 25.2020, lng: 55.2600, name: "Static Backlit Hoarding — Wellington, SZR", detail: "60M x 15M · 1 face", cost: "AED 638,000", color: RED, group: "Hoardings / Billboards", big: true },
-  { lat: 25.3200, lng: 55.4200, name: "Static Frontlit Hoarding — Sharjah, Etihad Road", detail: "50M x 13M · 1 face", cost: "AED 281,072", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.2106, lng: 55.2764, name: "Static Backlit Hoarding — DIFC", detail: "1 Face · 60M x 10M · Avail. Oct 2026, subject to availability at booking · Ref# UAE07 · Rec: Option 3 · High-impact visibility for professionals/residents/visitors in DIFC", cost: "AED 529,200", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.1930, lng: 55.2660, name: "Frontlit Hoarding — SZR, opposite Dubai Mall / Burj Khalifa", detail: "1 Face · 100M x 10M · Avail. Nov 2026, subject to availability at booking · Ref# UAE09 · Landmark visibility, day and night, nr. Paramount Hotel Midtown / Taj Dubai · verify exact GPS", cost: "AED 1,157,625", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.1870, lng: 55.2600, name: "Frontlit Hoarding — Dubai Canal, nr. Business Bay exit (SZR)", detail: "1 Face · 62M x 10M · Avail. Nov 2026, subject to availability at booking · Ref# UAE10 · Nr. JW Marriott Marquis / Business Bay Metro · verify exact GPS", cost: "AED 749,700", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.2185, lng: 55.2825, name: "Frontlit Hoarding — SZR, facing Emirates Towers", detail: "1 Face · 25M x 13M · Avail. Nov 2026, subject to availability at booking · Ref# UAE12 · Nr. Emirates Towers Metro / DIFC · Per official rate card: AED 429,975, not equal to Wellington · verify exact GPS", cost: "AED 429,975", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.1230, lng: 55.1970, name: "Static Backlit Hoarding — Wellington, SZR (Al Sufouh)", detail: "1 Face · 60M x 15M · Avail. Nov 2026, subject to availability at booking · Ref# UAE11 · Rec: Option 1, 2 & 3 · Between Mall of the Emirates and Al Sufouh, nr. Al Zahra Hospital · verify exact GPS", cost: "AED 639,450", color: RED, group: "Hoardings / Billboards", big: true },
+  { lat: 25.3400, lng: 55.3650, name: "Static Frontlit Hoarding — Sharjah, Etihad Road (nr. Mamazar Park)", detail: "1 Face · 50M x 13M · Avail. Oct 2026, subject to availability at booking · Ref# UAE19 · Rec: Option 3 · Nr. Al Mamzar Beach, Bin Ham Towers, Sahara Centre · verify exact GPS", cost: "AED 397,210.8", color: RED, group: "Hoardings / Billboards", big: true },
 
   // UNIPOLES (small) — shades of YELLOW, one shade per individual pole/cluster
-  { lat: 25.1800, lng: 55.2710, name: "Digital Unipole 1 — Al Khail Rd (nr. Business Bay towers)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,010 (shared)", color: YEL_300, group: "Unipoles", big: false },
-  { lat: 25.1770, lng: 55.2690, name: "Digital Unipole 2 — Al Khail Rd (nr. E44 interchange)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,010 (shared)", color: YEL_400, group: "Unipoles", big: false },
-  { lat: 25.1720, lng: 55.2670, name: "Digital Unipole 3 — Al Khail Rd (nr. Meydan STP / Miele)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,010 (shared)", color: YEL_500, group: "Unipoles", big: false },
-  { lat: 25.2230, lng: 55.2835, name: "Digital Unipole — Sheikh Zayed Rd (WTC Roundabout ↔ IC#1)", detail: "Approx. location, nr. Conrad Dubai / Eve Lounge · verify exact GPS", cost: "TBC", color: YEL_600, group: "Unipoles", big: false },
-  { lat: 25.2115, lng: 55.2775, name: "Digital Unipole — Sheikh Zayed Rd (before Dubai Mall / City Walk exit)", detail: "Approx. location, nr. DIFC / Shangri-La Dubai · verify exact GPS", cost: "TBC", color: YEL_200, group: "Unipoles", big: false },
-  { lat: 25.1330, lng: 55.2245, name: "Digital Unipole — Sheikh Zayed Rd (nr. Al Quoz, Oasis Mall / TYREPLUS)", detail: "Approx. location, between IC#2 and IC#3 · verify exact GPS", cost: "TBC", color: YEL_100, group: "Unipoles", big: false },
-  { lat: 25.1595, lng: 55.2205, name: "Digital Unipole — Sheikh Zayed Rd (nr. Al Manara / Nissan Service Centre)", detail: "Approx. location, between IC#2 and IC#3 · verify exact GPS", cost: "TBC", color: YEL_50, group: "Unipoles", big: false },
-  { lat: 25.1500, lng: 55.2250, name: "Digital Unipoles — Across Dubai", detail: "Multiple · 12 poles / 24 faces", cost: "AED 550,000", color: YEL_700, group: "Unipoles", big: false },
-  { lat: 25.4052, lng: 55.5304, name: "Static Backlit Unipole — Ajman, E311", detail: "12M x 6M · 2 faces", cost: "AED 110,000", color: YEL_800, group: "Unipoles", big: false },
-  { lat: 25.7895, lng: 55.9432, name: "Static Backlit Unipole — Ras Al Khaimah", detail: "12M x 6M · 2 faces", cost: "TBC", color: YEL_900, group: "Unipoles", big: false },
+  { lat: 25.1800, lng: 55.2710, name: "Digital Unipole 1 — Al Khail Rd (nr. Business Bay towers)", detail: "Approx. location · part of 4 faces + 2 FOC set · Supports: Business Bay Metro Platform (~1.1km) · verify exact GPS", cost: "AED 263,607.75 (shared)", color: YEL_300, group: "Unipoles", big: false },
+  { lat: 25.1770, lng: 55.2690, name: "Digital Unipole 2 — Al Khail Rd (nr. E44 interchange)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,607.75 (shared)", color: YEL_400, group: "Unipoles", big: false },
+  { lat: 25.1720, lng: 55.2670, name: "Digital Unipole 3 — Al Khail Rd (nr. Meydan STP / Miele)", detail: "Approx. location · part of 4 faces + 2 FOC set · verify exact GPS", cost: "AED 263,607.75 (shared)", color: YEL_500, group: "Unipoles", big: false },
+  { lat: 25.2230, lng: 55.2835, name: "Digital Unipole — Sheikh Zayed Rd (WTC Roundabout ↔ IC#1)", detail: "Approx. location, nr. Conrad Dubai / Eve Lounge · Supports: Emirates Towers Hoarding (~500m) · verify exact GPS", cost: "TBC", color: YEL_600, group: "Unipoles", big: false },
+  { lat: 25.2115, lng: 55.2775, name: "Digital Unipole — Sheikh Zayed Rd (before Dubai Mall / City Walk exit)", detail: "Approx. location, nr. DIFC / Shangri-La Dubai · Supports: DIFC Hoarding (~100m) · verify exact GPS", cost: "TBC", color: YEL_200, group: "Unipoles", big: false },
+  { lat: 25.1330, lng: 55.2245, name: "Digital Unipole — Sheikh Zayed Rd (nr. Al Quoz, Oasis Mall / TYREPLUS)", detail: "Approx. location, between IC#2 and IC#3 · Supports: Wellington Hoarding (~3km) · verify exact GPS", cost: "TBC", color: YEL_100, group: "Unipoles", big: false },
+  { lat: 25.1595, lng: 55.2205, name: "Digital Unipole — Sheikh Zayed Rd (nr. Al Manara / Nissan Service Centre)", detail: "Approx. location, between IC#2 and IC#3 · Supports: Wellington Hoarding (~4.5km) · verify exact GPS", cost: "TBC", color: YEL_50, group: "Unipoles", big: false },
+  { lat: 25.1920, lng: 55.2640, name: "Digital Unipole — Sheikh Zayed Rd (nr. Emarat Head Office, Business Bay)", detail: "Approx. location, nr. Business Bay Metro Station · Supports: Business Bay Metro Platform (~600m) · verify exact GPS", cost: "TBC", color: YEL_MUSTARD, group: "Unipoles", big: false },
+  { lat: 25.0295, lng: 55.1265, name: "Digital Unipole — Sheikh Mohammed Bin Zayed Rd (nr. Jumeirah Golf Estates)", detail: "2 Faces · 16M x 8M · 10 sec every 120 sec · nr. Al Furjan / District 1 · Supports: Discovery Gardens Metro Platform (~2km) · verify exact GPS", cost: "TBC", color: YEL_WHEAT, group: "Unipoles", big: false },
+  { lat: 25.1500, lng: 55.2250, name: "Digital Unipoles — Across Dubai", detail: "Multiple · 12 poles / 24 faces", cost: "AED 551,250", color: YEL_700, group: "Unipoles", big: false },
+  { lat: 25.4100, lng: 55.4750, name: "Static Backlit Unipole — Ajman, E311 (nr. Al Tallah Camel Race Course)", detail: "2 Faces · 12M x 6M · Avail. Nov 2026, subject to availability at booking · Ref# UAE20 · Rec: Option 2 & 3 · SMBZ Rd, DXB↔RAK traffic, nr. SGH Ajman Hospital · verify exact GPS", cost: "AED 110,250", color: YEL_800, group: "Unipoles", big: false },
+  { lat: 25.7860, lng: 55.9530, name: "Static Backlit Unipole — Ras Al Khaimah (Khuzam, nr. Clock Tower)", detail: "2 Faces · 12M x 6M · Avail. Nov 2026, subject to availability at booking · Ref# UAE21 · Rec: Option 2 & 3 · Khuzam area toward Mohammed Bin Salem Rd, nr. Dream Palace Hotel · verify exact GPS", cost: "TBC", color: YEL_900, group: "Unipoles", big: false },
 
   // METRO NETWORK (BIG) + PLATFORM STATIONS (BIG)
-  { lat: 25.2500, lng: 55.3000, name: "Metro Digital Network — Across Dubai", detail: "53 stations / 551 screens", cost: "AED 350,900", color: GREEN, group: "Metro", big: true },
-  { lat: 25.2532, lng: 55.3020, name: "Metro Platform — ADCB (Karama)", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
-  { lat: 25.2610, lng: 55.3120, name: "Metro Platform — Sharaf DG", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
-  { lat: 25.2690, lng: 55.3008, name: "Metro Platform — Union", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
-  { lat: 25.2547, lng: 55.3050, name: "Metro Platform — BurJuman (Bur Dubai/Satwa)", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
-  { lat: 25.2870, lng: 55.3450, name: "Metro Platform — Abu Hail (Deira)", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
-  { lat: 25.2400, lng: 55.3200, name: "Metro Platform — DCC", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
-  { lat: 25.1865, lng: 55.2615, name: "Metro Platform — Business Bay", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
-  { lat: 25.0390, lng: 55.1444, name: "Metro Platform — Discovery Gardens", detail: "Screen Wall · ~8 panels", cost: "~AED 90,988", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2500, lng: 55.3000, name: "Metro Digital Network — Across Dubai", detail: "55 Stations · 551 Screens · 12 sec spot · Avail. Oct 2026, subject to availability at booking · Ref# UAE05 · Builds daily brand recall in a high-dwell commuter environment", cost: "AED 351,697.5", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2532, lng: 55.3020, name: "Metro Platform — ADCB (Karama)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.2610, lng: 55.3120, name: "Metro Platform — Sharaf DG", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.2690, lng: 55.3008, name: "Metro Platform — Union", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.2547, lng: 55.3050, name: "Metro Platform — BurJuman (Bur Dubai/Satwa)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.2870, lng: 55.3450, name: "Metro Platform — Abu Hail (Deira)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.2400, lng: 55.3200, name: "Metro Platform — DCC", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.1865, lng: 55.2615, name: "Metro Platform — Business Bay", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.0390, lng: 55.1444, name: "Metro Platform — Discovery Gardens", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
 
   // BUS SHELTERS (small)
   { lat: 25.2750, lng: 55.3280, name: "Bus Shelter 13 — Port Saeed Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
@@ -118,8 +124,8 @@ const places = [
   { lat: 25.2600, lng: 55.2900, name: "Bus Shelter 904 — Mankhool, Street 7 (Bur Dubai)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
 
   // LAMPPOSTS / MEGACOMS (small) — ORANGE
-  { lat: 24.3450, lng: 54.5000, name: "Backlit Lampposts — Abu Dhabi, Mussafah", detail: "1.519M x 3.025M · 9 poles / 18 faces", cost: "AED 75,438", color: ORANGE, group: "Lampposts / Megacoms", big: false },
-  { lat: 25.3573, lng: 55.3900, name: "Digital Megacoms — Sharjah, Corniche", detail: "W360xH270px · 6 screens / 12 faces", cost: "AED 81,972", color: ORANGE, group: "Lampposts / Megacoms", big: false },
+  { lat: 24.3450, lng: 54.5000, name: "Backlit Lampposts — Abu Dhabi, Mussafah", detail: "1.519M x 3.025M · 9 poles / 18 faces", cost: "AED 75,609.45", color: ORANGE, group: "Lampposts / Megacoms", big: false },
+  { lat: 25.3573, lng: 55.3900, name: "Digital Megacoms — Sharjah, Corniche", detail: "W360xH270px · 6 screens / 12 faces", cost: "AED 82,158.3", color: ORANGE, group: "Lampposts / Megacoms", big: false },
 ];
 
 // 103 individual Digital Megacom locations (illustrative spread across Dubai - exact coordinates TBC from Red Dot)
@@ -200,6 +206,8 @@ groups.forEach(g => {
     if (item.big) {
       const size = item.name.includes("Network") ? 34 : 28;
       marker = L.marker([item.lat, item.lng], { icon: starIcon(item.color, size) }).addTo(map);
+    } else if (item.group === "Bus Shelters") {
+      marker = L.marker([item.lat, item.lng], { icon: starIcon(item.color, 16) }).addTo(map);
     } else {
       marker = L.marker([item.lat, item.lng], { icon: dotIcon(item.color, 10) }).addTo(map);
     }
