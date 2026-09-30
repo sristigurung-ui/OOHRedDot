@@ -46,8 +46,7 @@
 <div id="legend">
   <h3>Legend</h3>
   <div class="leg-row"><span style="color:#DC2626;font-size:18px;">★</span> Hoarding / Billboard (big)</div>
-  <div class="leg-row"><span style="color:#16A34A;font-size:18px;">★</span> Metro Digital Network (big star)</div>
-  <div class="leg-row"><div style="width:10px;height:10px;border-radius:50%;background:#16A34A;"></div> Metro Platform (small dot)</div>
+  <div class="leg-row"><span style="color:#16A34A;font-size:18px;">★</span> Metro (Network + Platform, big star)</div>
   <div class="leg-row"><div style="display:flex;gap:2px;"><div style="width:8px;height:10px;border-radius:50%;background:#FDE047;"></div><div style="width:8px;height:10px;border-radius:50%;background:#EAB308;"></div><div style="width:8px;height:10px;border-radius:50%;background:#A16207;"></div><div style="width:8px;height:10px;border-radius:50%;background:#713F12;"></div></div> Unipole (small, shade = individual pole)</div>
   <div class="leg-row"><span style="color:#2563EB;font-size:14px;">★</span> Bus Shelter (small star)</div>
   <div class="leg-row"><div style="width:10px;height:10px;border-radius:50%;background:#F97316;"></div> Lamppost / Megacom (small)</div>
@@ -106,14 +105,14 @@ const places = [
 
   // METRO NETWORK (BIG) + PLATFORM STATIONS (BIG)
   { lat: 25.2500, lng: 55.3000, name: "Metro Digital Network — Across Dubai", detail: "55 Stations · 551 Screens · 12 sec spot · Avail. Oct 2026, subject to availability at booking · Ref# UAE05 · Builds daily brand recall in a high-dwell commuter environment", cost: "AED 351,697.5", color: GREEN, group: "Metro", big: true },
-  { lat: 25.2532, lng: 55.3020, name: "Metro Platform — ADCB (Karama)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
-  { lat: 25.2610, lng: 55.3120, name: "Metro Platform — Sharaf DG", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
-  { lat: 25.2690, lng: 55.3008, name: "Metro Platform — Union", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
-  { lat: 25.2547, lng: 55.3050, name: "Metro Platform — BurJuman (Bur Dubai/Satwa)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
-  { lat: 25.2870, lng: 55.3450, name: "Metro Platform — Abu Hail (Deira)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
-  { lat: 25.2400, lng: 55.3200, name: "Metro Platform — DCC", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
-  { lat: 25.1865, lng: 55.2615, name: "Metro Platform — Business Bay", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
-  { lat: 25.0390, lng: 55.1444, name: "Metro Platform — Discovery Gardens", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: false },
+  { lat: 25.2532, lng: 55.3020, name: "Metro Platform — ADCB (Karama)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2610, lng: 55.3120, name: "Metro Platform — Sharaf DG", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2690, lng: 55.3008, name: "Metro Platform — Union", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2547, lng: 55.3050, name: "Metro Platform — BurJuman (Bur Dubai/Satwa)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2870, lng: 55.3450, name: "Metro Platform — Abu Hail (Deira)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
+  { lat: 25.2400, lng: 55.3200, name: "Metro Platform — DCC", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
+  { lat: 25.1865, lng: 55.2615, name: "Metro Platform — Business Bay", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
+  { lat: 25.0390, lng: 55.1444, name: "Metro Platform — Discovery Gardens", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true },
 
   // BUS SHELTERS (small)
   { lat: 25.2750, lng: 55.3280, name: "Bus Shelter 13 — Port Saeed Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false },
