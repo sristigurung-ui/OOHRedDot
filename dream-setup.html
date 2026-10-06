@@ -17,11 +17,15 @@
   #sidebar-header { padding: 14px 16px 10px; background: #fff; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 10; }
   #sidebar-header h2 { font-size: 12px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.04em; }
   .group-title { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.04em; padding: 12px 16px 4px; }
-  .card { background: #fff; margin: 6px 10px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: box-shadow 0.15s, transform 0.15s; border: 2px solid transparent; padding: 10px 12px; cursor: pointer; }
-  .card:hover, .card.active { box-shadow: 0 4px 14px rgba(0,0,0,0.16); transform: translateY(-1px); }
-  .card-name { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
-  .card-detail { font-size: 11px; color: #888; }
-  .card-cost { font-size: 11px; color: #444; font-weight: 600; margin-top: 4px; }
+  .card { background: #fff; margin: 8px 10px 0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: box-shadow 0.15s, transform 0.15s; border: 2px solid transparent; padding: 12px 14px 14px; cursor: pointer; }
+  .card:hover, .card.active { box-shadow: 0 6px 18px rgba(0,0,0,0.18); transform: translateY(-2px); }
+  .card-name { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 5px; line-height: 1.3; }
+  .card-detail { font-size: 12px; color: #777; line-height: 1.5; margin-bottom: 2px; }
+  .card-cost { font-size: 13px; color: #1a1a1a; font-weight: 700; margin-top: 6px; }
+  .card-tag { display: inline-block; font-size: 10px; font-weight: 700; color: #444; background: #f0f0f0; border-radius: 20px; padding: 3px 10px; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .card img.clickable-photo { transition: opacity 0.15s; }
+  .card img.clickable-photo:hover { opacity: 0.9; }
+  .marker-highlight { transform: scale(1.35); filter: drop-shadow(0 0 6px rgba(0,0,0,0.45)); transition: transform 0.15s; z-index: 10000 !important; }
   #legend { position: absolute; bottom: 24px; left: 24px; z-index: 1000; background: #fff; border-radius: 10px; padding: 12px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
   #legend h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; font-weight: 700; margin-bottom: 8px; }
   .leg-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #333; font-weight: 500; margin-bottom: 6px; }
@@ -47,13 +51,14 @@
 <body>
 <div id="header">
   <h1>TTS UAE - Final Placement Selection</h1>
-  <p>Stars = all placements, colour-coded by category (Hoardings, Metro, Bus Shelters, Airport)</p>
+  <p>Stars = all placements, colour-coded by category (Hoardings, Metro, Bus Shelters, Airport) · Hover a card to highlight it on the map · Click a photo to expand</p>
 </div>
 <div id="main">
   <div id="map"></div>
   <div id="sidebar">
     <div id="sidebar-header">
       <h2>All Locations</h2>
+      <div style="font-size:11px;color:#999;margin-top:3px;font-weight:400;text-transform:none;letter-spacing:normal;">Hover card to highlight on map · Click photo to expand</div>
     </div>
     <div id="cards"></div>
   </div>
@@ -101,14 +106,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // paper map rather than dropping a plain circle over it.
 const zones = [
   {
-    name: "Northern Dubai (Deira / Bur Dubai / Karama / Satwa)",
+    name: "Northern Dubai (Deira / Bur Dubai / Karama / Satwa / DXB)",
     color: "#F59E0B",      // amber
     fillOpacity: 0.16,
     outline: [
       [25.2970, 55.3420],
-      [25.2860, 55.3560],
-      [25.2700, 55.3520],
-      [25.2540, 55.3570],
+      [25.2870, 55.3750],
+      [25.2700, 55.3800],
+      [25.2500, 55.3750],
       [25.2340, 55.3500],
       [25.2140, 55.3360],
       [25.1980, 55.3120],
@@ -128,20 +133,20 @@ const zones = [
     color: "#0D9488",      // teal
     fillOpacity: 0.16,
     outline: [
-      [25.3880, 55.3700],
-      [25.3750, 55.3900],
-      [25.3650, 55.4250],
-      [25.3550, 55.4700],
-      [25.3450, 55.5050],
-      [25.3280, 55.5300],
+      [25.3780, 55.3820],
+      [25.3700, 55.4050],
+      [25.3620, 55.4400],
+      [25.3520, 55.4800],
+      [25.3400, 55.5150],
+      [25.3250, 55.5320],
       [25.3080, 55.5150],
-      [25.2950, 55.4800],
-      [25.3000, 55.4400],
-      [25.3080, 55.4050],
-      [25.3150, 55.3850],
-      [25.3300, 55.3700],
-      [25.3500, 55.3620],
-      [25.3700, 55.3600]
+      [25.2980, 55.4800],
+      [25.3020, 55.4400],
+      [25.3100, 55.4050],
+      [25.3200, 55.3880],
+      [25.3350, 55.3750],
+      [25.3550, 55.3700],
+      [25.3700, 55.3720]
     ]
   }
 ];
@@ -209,7 +214,7 @@ function starIcon(color, size, emphasize) {
   if (emphasize) {
     // Emphasized pin: bigger star with a stronger drop-shadow to read as
     // "raised" off the map surface - no glow/halo behind it.
-    const starSize = size + 8;
+    const starSize = size + 6;
     return L.divIcon({
       className: '',
       html: `<div style="width:${starSize}px;height:${starSize}px;display:flex;align-items:center;justify-content:center;font-size:${starSize-6}px;color:${color};text-shadow:${crispOutline};filter:drop-shadow(0 4px 5px rgba(0,0,0,0.55));transform:translateY(-2px);">★</div>`,
@@ -240,25 +245,25 @@ const places = [
 
   // METRO NETWORK (BIG) + PLATFORM STATIONS (BIG)
   { lat: 25.2500, lng: 55.3000, name: "Metro Digital Network - Across Dubai", detail: "55 Stations · 551 Screens · 12 sec spot · Avail. Oct 2026, subject to availability at booking · Ref# UAE05 · Builds daily brand recall in a high-dwell commuter environment", cost: "AED 351,697.5", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.2532, lng: 55.3020, name: "Metro Platform - ADCB (Karama)", photo: PHOTO_PLATFORM, detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.2610, lng: 55.3120, name: "Metro Platform - Sharaf DG", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.2690, lng: 55.3008, name: "Metro Platform - Union", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.2547, lng: 55.3050, name: "Metro Platform - BurJuman (Bur Dubai/Satwa)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.2870, lng: 55.3450, name: "Metro Platform - Abu Hail (Deira)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.2400, lng: 55.3200, name: "Metro Platform - DCC", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.1865, lng: 55.2615, name: "Metro Platform - Business Bay", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
-  { lat: 25.0390, lng: 55.1444, name: "Metro Platform - Discovery Gardens", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true },
+  { lat: 25.2532, lng: 55.3020, name: "Metro Platform - ADCB (Karama)", photo: PHOTO_PLATFORM, detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
+  { lat: 25.2610, lng: 55.3120, name: "Metro Platform - Sharaf DG", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
+  { lat: 25.2690, lng: 55.3008, name: "Metro Platform - Union", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
+  { lat: 25.2547, lng: 55.3050, name: "Metro Platform - BurJuman (Bur Dubai/Satwa)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
+  { lat: 25.2870, lng: 55.3450, name: "Metro Platform - Abu Hail (Deira)", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
+  { lat: 25.2400, lng: 55.3200, name: "Metro Platform - DCC", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
+  { lat: 25.1865, lng: 55.2615, name: "Metro Platform - Business Bay", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
+  { lat: 25.0390, lng: 55.1444, name: "Metro Platform - Discovery Gardens", detail: "Screen Wall · ~62 panels/station, both bounds · part of AED 649,923.75 combined (all 8 platforms) · Ref# UAE06", cost: "AED 649,923.75 (combined)", color: GREEN, group: "Metro", big: true, emphasize: true, cardGroup: "metro-platforms" },
   { lat: 25.2690, lng: 55.3008, name: "Overhead Panel - In-Train (network-wide)", detail: "650 Panels / 125 Trains · Hypermedia · 6 Weeks · not a fixed location - pin marks Union interchange as a representative point", cost: "AED 446,053.65", color: GREEN, group: "Metro", big: true, emphasize: true },
 
   // BUS SHELTERS (small)
-  { lat: 25.2750, lng: 55.3280, name: "Bus Shelter 13 - Port Saeed Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
-  { lat: 25.2880, lng: 55.3460, name: "Bus Shelter 398 - Abu Hail Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
-  { lat: 25.2820, lng: 55.3350, name: "Bus Shelter 895 - Manama 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
-  { lat: 25.2540, lng: 55.3040, name: "Bus Shelter 250 - Karama 2 (Karama)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
-  { lat: 25.2500, lng: 55.2980, name: "Bus Shelter 95 - Saeediya School 2 (Karama)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
-  { lat: 25.2600, lng: 55.2900, name: "Bus Shelter 904 - Mankhool, Street 7 (Bur Dubai)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
-  { lat: 25.2270, lng: 55.2721, name: "Bus Shelter 119 - Al Satwa Road 1", detail: "Single Face · Red Dot · 4 Weeks · approx. location", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
-  { lat: 25.2275, lng: 55.2730, name: "Bus Shelter 117 A/B - Khadri Masjid 1 (Al Satwa)", detail: "Single Face · Red Dot · 4 Weeks · approx. location", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true },
+  { lat: 25.2750, lng: 55.3280, name: "Bus Shelter 13 - Port Saeed Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
+  { lat: 25.2880, lng: 55.3460, name: "Bus Shelter 398 - Abu Hail Masjid 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
+  { lat: 25.2820, lng: 55.3350, name: "Bus Shelter 895 - Manama 1 (Deira)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
+  { lat: 25.2540, lng: 55.3040, name: "Bus Shelter 250 - Karama 2 (Karama)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
+  { lat: 25.2500, lng: 55.2980, name: "Bus Shelter 95 - Saeediya School 2 (Karama)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
+  { lat: 25.2600, lng: 55.2900, name: "Bus Shelter 904 - Mankhool, Street 7 (Bur Dubai)", detail: "Single Face", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
+  { lat: 25.2270, lng: 55.2721, name: "Bus Shelter 119 - Al Satwa Road 1", detail: "Single Face · Red Dot · 4 Weeks · approx. location", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
+  { lat: 25.2275, lng: 55.2730, name: "Bus Shelter 117 A/B - Khadri Masjid 1 (Al Satwa)", detail: "Single Face · Red Dot · 4 Weeks · approx. location", cost: "~AED 14,201", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
 
   // SHARJAH - MAG (big) - PURPLE
   { lat: 25.3573, lng: 55.3908, name: "Corniche Megacoms (Sharjah)", photo: PHOTO_SHARJAH_MEGACOM, detail: "3 units / 6 faces · 4M x 3M · MAG · 6 weeks · approx. location", cost: "AED 85,000", color: PURPLE, group: "Sharjah (MAG)", big: true, emphasize: true },
@@ -283,36 +288,87 @@ function addGroupTitle(title) {
 function addCard(item, marker) {
   const card = document.createElement('div');
   card.className = 'card';
-  const photoHtml = item.photo ? `<img class="clickable-photo" src="${item.photo}" style="width:100%;border-radius:6px;margin-bottom:6px;display:block;" />` : '';
-  card.innerHTML = `${photoHtml}<div class="card-name">${item.name}</div><div class="card-detail">${item.detail}</div><div class="card-cost">💰 ${item.cost}</div>`;
+  const photoHtml = item.photo ? `<img class="clickable-photo" src="${item.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;display:block;" />` : '';
+  card.innerHTML = `${photoHtml}<div class="card-name">${item.name}</div><div class="card-detail">📍 ${item.detail}</div><div class="card-cost">💰 ${item.cost}</div><span class="card-tag" style="color:${item.color};background:${item.color}1a;">${item.group}</span>`;
   if (item.photo) {
     const imgEl = card.querySelector('img.clickable-photo');
     imgEl.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(item.photo); });
   }
   card.addEventListener('click', () => map.flyTo([item.lat, item.lng], 13, { duration: 1 }));
-  card.addEventListener('mouseenter', () => card.classList.add('active'));
-  card.addEventListener('mouseleave', () => card.classList.remove('active'));
+  card.addEventListener('mouseenter', () => { card.classList.add('active'); if (marker) marker.getElement()?.classList.add('marker-highlight'); });
+  card.addEventListener('mouseleave', () => { card.classList.remove('active'); if (marker) marker.getElement()?.classList.remove('marker-highlight'); });
   cardsEl.appendChild(card);
 }
+
+// Consolidated-card summaries for groups of repeated/duplicate placements.
+// Individual markers still get placed on the map for each location; only the
+// SIDEBAR CARD is collapsed into one entry per cardGroup, matching how a
+// multi-site product (e.g. "ENOC Digital Network, 67 stations") is shown as
+// a single card rather than one per site.
+const cardGroupSummaries = {
+  "metro-platforms": {
+    name: "Metro Platform Screen Walls (8 Stations)",
+    detail: "~62 panels/station, both bounds · ADCB, Sharaf DG, Union, BurJuman, Abu Hail, DCC, Business Bay, Discovery Gardens · Ref# UAE06",
+    cost: "AED 649,923.75 (combined, all 8 stations)",
+    photo: "PHOTO_PLATFORM_REF"
+  },
+  "bus-shelters": {
+    name: "Bus Shelters (8 Locations)",
+    detail: "Single face each · Deira x4, Karama x2, Bur Dubai x1, Al Satwa x1 · Red Dot",
+    cost: "AED 113,608 total (~AED 14,201 each)"
+  }
+};
 
 const groups = ["Hoardings / Billboards", "Metro", "Bus Shelters", "Sharjah (MAG)", "Airport"];
 groups.forEach(g => {
   const groupPlaces = places.filter(p => p.group === g);
   if (groupPlaces.length === 0) return;
   addGroupTitle(`${g} (${groupPlaces.length})`);
+
+  const markersByCardGroup = {}; // collects every marker in this category sharing a cardGroup key
+  const nonConsolidatedItems = []; // (item, marker) pairs to render as normal cards, in order
   groupPlaces.forEach(item => {
-    const size = item.big ? (item.name.includes("Network") ? 34 : 28) : 16;
+    const size = item.big ? (item.name.includes("Network") ? 28 : 23) : 13;
     const marker = L.marker([item.lat, item.lng], { icon: starIcon(item.color, size, !!item.emphasize) }).addTo(map);
-    marker.bindTooltip(`<b>${item.name}</b><br>${item.detail}<br>${item.cost}`, { direction: 'top', offset: [0,-14] });
+    marker.bindTooltip(`<b>${item.group}</b><br>${item.name}`, { direction: 'top', offset: [0,-14] });
     if (item.photo) {
-      marker.bindPopup(`<div style="max-width:260px;"><img class="clickable-photo" src="${item.photo}" style="width:100%;border-radius:4px;margin-bottom:6px;display:block;"/><b>${item.name}</b><br>${item.cost}</div>`);
+      marker.bindPopup(`<div style="max-width:260px;"><img class="clickable-photo" src="${item.photo}" style="width:100%;border-radius:4px;margin-bottom:6px;display:block;"/><b>${item.group}</b><br>${item.name}</div>`);
       marker.on('popupopen', () => {
         const popupImg = marker.getPopup().getElement().querySelector('img.clickable-photo');
         if (popupImg) popupImg.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(item.photo); });
       });
+    } else {
+      marker.bindPopup(`<div style="max-width:260px;"><b>${item.group}</b><br>${item.name}</div>`);
     }
-    addCard(item, marker);
+
+    if (item.cardGroup) {
+      (markersByCardGroup[item.cardGroup] = markersByCardGroup[item.cardGroup] || []).push(marker);
+      return;
+    }
+    nonConsolidatedItems.push([item, marker]);
   });
+
+  // Render consolidated cards first (so e.g. "Metro Platforms" leads the Metro section),
+  // then the remaining individual cards.
+  Object.keys(markersByCardGroup).forEach(cardGroupKey => {
+    const summary = cardGroupSummaries[cardGroupKey];
+    const groupMarkers = markersByCardGroup[cardGroupKey];
+    const photo = summary.photo === "PHOTO_PLATFORM_REF" ? PHOTO_PLATFORM : summary.photo;
+    const boundsLatLngs = places.filter(p => p.cardGroup === cardGroupKey).map(p => [p.lat, p.lng]);
+    const card = document.createElement('div');
+    card.className = 'card';
+    const photoHtml = photo ? `<img class="clickable-photo" src="${photo}" style="width:100%;border-radius:8px;margin-bottom:8px;display:block;" />` : '';
+    card.innerHTML = `${photoHtml}<div class="card-name">${summary.name}</div><div class="card-detail">📍 ${summary.detail}</div><div class="card-cost">💰 ${summary.cost}</div><span class="card-tag" style="color:${g === 'Metro' ? GREEN : BLUE};background:${(g === 'Metro' ? GREEN : BLUE)}1a;">${g}</span>`;
+    if (photo) {
+      const imgEl = card.querySelector('img.clickable-photo');
+      imgEl.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(photo); });
+    }
+    card.addEventListener('click', () => map.fitBounds(boundsLatLngs, { padding: [40,40] }));
+    card.addEventListener('mouseenter', () => { card.classList.add('active'); groupMarkers.forEach(m => m.getElement()?.classList.add('marker-highlight')); });
+    card.addEventListener('mouseleave', () => { card.classList.remove('active'); groupMarkers.forEach(m => m.getElement()?.classList.remove('marker-highlight')); });
+    cardsEl.appendChild(card);
+  });
+  nonConsolidatedItems.forEach(([item, marker]) => addCard(item, marker));
 });
 </script>
 </body>
