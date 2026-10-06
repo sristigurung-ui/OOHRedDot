@@ -73,6 +73,7 @@
   <h3>Key</h3>
   <div class="leg-row"><span style="color:#DC2626;font-size:18px;">★</span> Hoarding / Billboard</div>
   <div class="leg-row"><span style="color:#16A34A;font-size:18px;">★</span> Metro</div>
+
   <div class="leg-row"><span style="color:#2563EB;font-size:18px;">★</span> Bus Shelter</div>
   <div class="leg-row"><span style="color:#9333EA;font-size:18px;">★</span> Sharjah / MAG</div>
   <div class="leg-row"><span style="color:#F97316;font-size:18px;">★</span> Airport</div>
@@ -101,7 +102,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 
 const RED = '#DC2626', GREEN = '#16A34A', BLUE = '#2563EB', ORANGE = '#F97316', PURPLE = '#9333EA';
-const METRO_LINE_COLOR = '#C8102E'; // RTA Red Line colour
+const METRO_LINE_COLOR = '#1E3A8A'; // navy - chosen for contrast against OSM's red/orange road tiles
 
 // Illustrative Dubai Metro line - connects our platform-station points in a
 // rough south-to-north path. Coordinates are the same approximate points
@@ -117,13 +118,14 @@ const metroLinePoints = [
   [25.2690, 55.3008], // Union
   [25.2870, 55.3450], // Abu Hail
 ];
-L.polyline(metroLinePoints, {
+const metroLineMain = L.polyline(metroLinePoints, {
   color: METRO_LINE_COLOR,
   weight: 4,
   opacity: 0.75,
   dashArray: null,
-  interactive: false
-}).addTo(map).bindTooltip("Dubai Metro - illustrative corridor", { permanent: false });
+  interactive: true
+}).addTo(map).bindTooltip("Dubai Metro Red Line - click to show/hide stations", { permanent: false });
+metroLineMain.on('click', () => toggleRedLineStations());
 // Thin white centre-line on top to give a "rail track" look
 L.polyline(metroLinePoints, {
   color: '#ffffff',
@@ -208,10 +210,10 @@ const places = [
   { lat: 25.2275, lng: 55.2730, name: "Bus Shelter 117 A/B - Khadri Masjid 1 (Al Satwa)", detail: "Single Face · Red Dot · 4 Weeks · approx. location", cost: "~AED 14,201", color: BLUE, photo: PHOTO_BUS_SHELTER, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
 
   // SHARJAH - MAG (big) - PURPLE
-  { lat: 25.3573, lng: 55.3908, name: "Corniche Megacoms (Sharjah)", photo: PHOTO_SHARJAH_MEGACOM, detail: "3 units / 6 faces · 4M x 3M · MAG · 6 weeks · approx. location", cost: "AED 85,000", color: PURPLE, group: "Sharjah (MAG)", big: true, emphasize: true },
-  { lat: 25.3580, lng: 55.3920, name: "Corniche Mini Unipoles (Buhairah Corniche, Sharjah)", photo: PHOTO_SHARJAH_UNIPOLE, detail: "6 units / 12 faces · 6M x 4M static · MAG · 6 weeks · approx. location", cost: "AED 105,000", color: PURPLE, group: "Sharjah (MAG)", big: true, emphasize: true },
-  { lat: 25.3600, lng: 55.3940, name: "Sharjah Bus Wraps (2 buses, city-wide)", photo: PHOTO_SHARJAH_BUS, detail: "2 full-wrap buses · MAG · 6 weeks · not a fixed location - pin marks Sharjah city centre", cost: "AED 90,000", color: PURPLE, group: "Sharjah (MAG)", big: true, emphasize: true },
-  { lat: 25.3545, lng: 55.3875, name: "Sharjah Taxi Wraps (50 taxis, city-wide)", photo: PHOTO_SHARJAH_TAXI, detail: "50 taxis · MAG · 4 weeks · added value, free of charge · not a fixed location - pin marks Sharjah city centre", cost: "AED 0 (FOC)", color: PURPLE, group: "Sharjah (MAG)", big: true, emphasize: true },
+  { lat: 25.3573, lng: 55.3908, name: "Corniche Megacoms (Sharjah)", photo: PHOTO_SHARJAH_MEGACOM, detail: "3 units / 6 faces · 4M x 3M · MAG · 6 weeks · approx. location", cost: "AED 85,000", color: PURPLE, group: "Sharjah", big: true, emphasize: true },
+  { lat: 25.3580, lng: 55.3920, name: "Corniche Mini Unipoles (Buhairah Corniche, Sharjah)", photo: PHOTO_SHARJAH_UNIPOLE, detail: "6 units / 12 faces · 6M x 4M static · MAG · 6 weeks · approx. location", cost: "AED 105,000", color: PURPLE, group: "Sharjah", big: true, emphasize: true },
+  { lat: 25.3600, lng: 55.3940, name: "Sharjah Bus Wraps (2 buses, city-wide)", photo: PHOTO_SHARJAH_BUS, detail: "2 full-wrap buses · MAG · 6 weeks · not a fixed location - pin marks Sharjah city centre", cost: "AED 90,000", color: PURPLE, group: "Bus Shelters", big: true, emphasize: true },
+  { lat: 25.3545, lng: 55.3875, name: "Sharjah Taxi Wraps (50 taxis, city-wide)", photo: PHOTO_SHARJAH_TAXI, detail: "50 taxis · MAG · 4 weeks · added value, free of charge · not a fixed location - pin marks Sharjah city centre", cost: "AED 0 (FOC)", color: PURPLE, group: "Sharjah", big: true, emphasize: true },
 
   // AIRPORT (big) - ORANGE
   { lat: 25.2528, lng: 55.3644, name: "DXB Baggage Collection (T1, 18 faces)", photo: PHOTO_DXB_BAGGAGE, detail: "Faces: 18 · Red Dot · 4 weeks · 10 sec / 80 sec loop · Confirmed in Final costings sheet · NOTE: may overlap with Boarding Gates Network Concourse D (also 18 faces, AED 235,000) - naming is ambiguous in source data, flag with Red Dot before booking · approx. location", cost: "AED 235,000", color: ORANGE, group: "Airport", big: true, emphasize: true },
@@ -236,7 +238,10 @@ function addCard(item, marker) {
     const imgEl = card.querySelector('img.clickable-photo');
     imgEl.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(item.photo); });
   }
-  card.addEventListener('click', () => map.flyTo([item.lat, item.lng], 13, { duration: 1 }));
+  card.addEventListener('click', () => {
+    map.flyTo([item.lat, item.lng], 13, { duration: 1 });
+    if (item.group === "Metro") toggleRedLineStations();
+  });
   card.addEventListener('mouseenter', () => { card.classList.add('active'); if (marker) marker.getElement()?.classList.add('marker-highlight'); });
   card.addEventListener('mouseleave', () => { card.classList.remove('active'); if (marker) marker.getElement()?.classList.remove('marker-highlight'); });
   cardsEl.appendChild(card);
@@ -262,7 +267,7 @@ const cardGroupSummaries = {
   }
 };
 
-const groups = ["Hoardings / Billboards", "Metro", "Bus Shelters", "Sharjah (MAG)", "Airport"];
+const groups = ["Hoardings / Billboards", "Metro", "Bus Shelters", "Sharjah", "Airport"];
 groups.forEach(g => {
   const groupPlaces = places.filter(p => p.group === g);
   if (groupPlaces.length === 0) return;
@@ -307,13 +312,48 @@ groups.forEach(g => {
       const imgEl = card.querySelector('img.clickable-photo');
       imgEl.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(photo); });
     }
-    card.addEventListener('click', () => map.fitBounds(boundsLatLngs, { padding: [40,40] }));
+    card.addEventListener('click', () => {
+      map.fitBounds(boundsLatLngs, { padding: [40,40] });
+      if (g === "Metro") toggleRedLineStations();
+    });
     card.addEventListener('mouseenter', () => { card.classList.add('active'); groupMarkers.forEach(m => m.getElement()?.classList.add('marker-highlight')); });
     card.addEventListener('mouseleave', () => { card.classList.remove('active'); groupMarkers.forEach(m => m.getElement()?.classList.remove('marker-highlight')); });
     cardsEl.appendChild(card);
   });
   nonConsolidatedItems.forEach(([item, marker]) => addCard(item, marker));
 });
+
+// RED LINE STATIONS - hidden by default, "light up" (shown) only when the
+// red Metro line is clicked on the map, or a Metro sidebar card is clicked.
+// Red Line only, per request - no Green Line stations. Coordinates are
+// approximate (station-level, not survey-accurate).
+const redLineStations = [
+  "Centrepoint|25.2280|55.3850", "Emirates|25.2400|55.3500", "Airport Terminal 3|25.2460|55.3600",
+  "Airport Terminal 1|25.2532|55.3644", "Al Garhoud|25.2450|55.3400", "City Centre Deira|25.2520|55.3350",
+  "Al Rigga|25.2650|55.3230", "Union|25.2661|55.3139", "BurJuman|25.2547|55.3042", "ADCB|25.2532|55.3020",
+  "Max|25.2350|55.2920", "World Trade Centre|25.2228|55.2825", "Emirates Towers|25.2185|55.2825",
+  "Financial Centre|25.2110|55.2810", "Burj Khalifa / Dubai Mall|25.1972|55.2744", "Business Bay|25.1865|55.2615",
+  "Garmin|25.1350|55.2150", "Equiti|25.1050|55.2080", "Mall of the Emirates|25.1181|55.2003",
+  "InsuranceMarket|25.1140|55.1960", "Dubai Internet City|25.0970|55.1620", "Al Fardan Exchange|25.0950|55.1780",
+  "Sobha Realty|25.0890|55.1620", "DMCC|25.0657|55.1403", "National Paints|25.0300|55.1450",
+  "Ibn Battuta|25.0440|55.1170", "Energy|25.0050|55.1300", "Danube|24.9950|55.1250", "Life Pharmacy|24.9850|55.1150",
+  "The Gardens|25.0450|55.1480", "Discovery Gardens|25.0390|55.1444", "Al Furjan|25.0280|55.1280",
+  "Jumeirah Golf Estates|25.0380|55.1080", "Dubai Investments Park|25.0150|55.1050", "Expo City|24.9593|55.1507",
+];
+const redLineStationsLayer = L.layerGroup(); // not added to map by default
+redLineStations.forEach(entry => {
+  const [name, lat, lng] = entry.split('|');
+  const marker = L.marker([parseFloat(lat), parseFloat(lng)], { icon: dotIcon(RED, 8) });
+  marker.bindTooltip(`<b>Metro Station (Red Line)</b><br>${name}<br>In-train marketing runs network-wide`, { direction: 'top', offset: [0,-6] });
+  marker.addTo(redLineStationsLayer);
+});
+function toggleRedLineStations() {
+  if (map.hasLayer(redLineStationsLayer)) {
+    map.removeLayer(redLineStationsLayer);
+  } else {
+    redLineStationsLayer.addTo(map);
+  }
+}
 </script>
 </body>
 </html>
