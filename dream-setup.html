@@ -32,6 +32,7 @@
   .leaflet-popup-content-wrapper { border-radius: 14px; }
   .leaflet-popup-content { margin: 16px 18px; }
   .leaflet-popup-tip-container { display: none; }
+  .leaflet-tooltip { white-space: normal; max-width: 260px; border-radius: 10px; padding: 8px 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
   .clickable-photo { cursor: zoom-in; }
   #lightbox-overlay {
     display: none; position: fixed; inset: 0; z-index: 5000;
@@ -52,7 +53,7 @@
 <body>
 <div id="header">
   <h1>TTS UAE - Final Placement Selection</h1>
-  <p>Stars = all placements, colour-coded by category (Hoardings, Metro, Bus Shelters, Airport) · Hover a card to highlight it on the map · Click a photo to expand</p>
+  <p>Stars = all placements, colour-coded by category (Hoardings / Megapoles, Metro, Bus Shelters, Taxis, Airport) · Hover a card to highlight it on the map · Click a photo to expand</p>
 </div>
 <div id="main">
   <div id="map"></div>
@@ -70,11 +71,11 @@
 </div>
 <div id="legend">
   <h3>Key</h3>
-  <div class="leg-row"><span style="color:#DC2626;font-size:18px;">★</span> Hoarding / Billboard</div>
+  <div class="leg-row"><span style="color:#DC2626;font-size:18px;">★</span> Hoardings / Megapoles</div>
   <div class="leg-row"><span style="color:#16A34A;font-size:18px;">★</span> Metro</div>
 
   <div class="leg-row"><span style="color:#2563EB;font-size:18px;">★</span> Bus Shelter</div>
-  <div class="leg-row"><span style="color:#9333EA;font-size:18px;">★</span> Sharjah / MAG</div>
+  <div class="leg-row"><span style="color:#9333EA;font-size:18px;">★</span> Taxis</div>
   <div class="leg-row"><span style="color:#F97316;font-size:18px;">★</span> Airport</div>
 
 
@@ -256,8 +257,8 @@ function dotIcon(color, size) {
 // [lat, lng, name, detail, cost, color, group, big]
 const places = [
   // HOARDINGS / BILLBOARDS (BIG)
-  { lat: 25.2110, lng: 55.2810, name: "Financial Centre Metro Bridge", photo: PHOTO_FC_BRIDGE, detail: "Static bridge board · Hypermedia · duration TBC · approx. location", color: RED, group: "Hoardings / Billboards", big: true, emphasize: true },
-  { lat: 25.3476, lng: 55.3862, name: "Rolla Market (Sharjah)", photo: PHOTO_ROLLA_MARKET, detail: "1 Face · MAG · 4 weeks · Exclusive · approx. location", color: RED, group: "Hoardings / Billboards", big: true, emphasize: true },
+  { lat: 25.2110, lng: 55.2810, name: "Financial Centre Metro Bridge", photo: PHOTO_FC_BRIDGE, detail: "Digital LED bridge banner · Red Dot · 4 weeks · approx. location", color: RED, group: "Hoardings / Megapoles", big: true, emphasize: true },
+  { lat: 25.3476, lng: 55.3862, name: "Rolla Market (Sharjah)", photo: PHOTO_ROLLA_MARKET, detail: "1 Face · Red Dot · 4 weeks · Exclusive · approx. location", color: RED, group: "Hoardings / Megapoles", big: true, emphasize: true },
 
 
   // METRO NETWORK (BIG) + PLATFORM STATIONS (BIG)
@@ -282,20 +283,20 @@ const places = [
   { lat: 25.2270, lng: 55.2721, name: "Bus Shelter 119 - Al Satwa Road 1", detail: "Single Face · Red Dot · 4 Weeks · approx. location", color: BLUE, photo: PHOTO_BUS_SHELTER, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
   { lat: 25.2275, lng: 55.2730, name: "Bus Shelter 117 A/B - Khadri Masjid 1 (Al Satwa)", detail: "Single Face · Red Dot · 4 Weeks · approx. location", color: BLUE, photo: PHOTO_BUS_SHELTER, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
 
-  // SHARJAH - MAG (big) - PURPLE
-  { lat: 25.3573, lng: 55.3908, name: "Corniche Megacoms (Sharjah)", photo: PHOTO_SHARJAH_MEGACOM, detail: "3 units / 6 faces · 4M x 3M · MAG · 6 weeks · approx. location", color: PURPLE, group: "Sharjah", big: true, emphasize: true },
-  { lat: 25.3580, lng: 55.3920, name: "Corniche Mini Unipoles (Buhairah Corniche, Sharjah)", photo: PHOTO_SHARJAH_UNIPOLE, detail: "6 units / 12 faces · 6M x 4M static · MAG · 6 weeks · approx. location", color: PURPLE, group: "Sharjah", big: true, emphasize: true },
+  // SHARJAH (Red Dot)
+  { lat: 25.3573, lng: 55.3908, name: "Corniche Megacoms (Sharjah)", photo: PHOTO_SHARJAH_MEGACOM, detail: "3 units / 6 faces · 4M x 3M · Red Dot · 6 weeks · approx. location", color: RED, group: "Hoardings / Megapoles", big: true, emphasize: true },
+  { lat: 25.3580, lng: 55.3920, name: "Corniche Mini Unipoles (Buhairah Corniche, Sharjah)", photo: PHOTO_SHARJAH_UNIPOLE, detail: "6 units / 12 faces · 6M x 4M static · Red Dot · 6 weeks · approx. location", color: RED, group: "Hoardings / Megapoles", big: true, emphasize: true },
   { lat: 25.3405, lng: 55.3925, name: "Sharjah Bus Shelter - Al Majaz 1 (King Faisal St, in front of ADNOC)", photo: PHOTO_BUS_SHELTER, detail: "Single face · Red Dot · 4 weeks · station #6 Faisal 1 or #575 Faisal 2, to confirm · approx. location", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
   { lat: 25.3203, lng: 55.384, name: "Sharjah Bus Shelter - Al Majaz 2 (Al Wahda St, opp. City Centre, Dubai direction)", photo: PHOTO_BUS_SHELTER, detail: "Single face · Red Dot · 4 weeks · station #70, to confirm · approx. location", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
   { lat: 25.3109, lng: 55.3776, name: "Sharjah Bus Shelter - Al Nahdha (Al Wahda St, Sharjah direction)", photo: PHOTO_BUS_SHELTER, detail: "Single face · Red Dot · 4 weeks · station #85 Al Wahda East, to confirm · approx. location", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
   { lat: 25.3663, lng: 55.3969, name: "Sharjah Bus Shelter - Al Musalla (Clock roundabout)", photo: PHOTO_BUS_SHELTER, detail: "Single face · Red Dot · 4 weeks · station #104 · approx. location", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
   { lat: 25.3632, lng: 55.4041, name: "Sharjah Bus Shelter - Maysaloon (Police HQ)", photo: PHOTO_BUS_SHELTER, detail: "Single face · Red Dot · 4 weeks · station #106 · approx. location", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
   { lat: 25.3701, lng: 55.4107, name: "Sharjah Bus Shelter - Al Nasserya", photo: PHOTO_BUS_SHELTER, detail: "Single face · Red Dot · 4 weeks · station #107 · approx. location", color: BLUE, group: "Bus Shelters", big: false, emphasize: true, cardGroup: "bus-shelters" },
-  { lat: 25.3600, lng: 55.3940, name: "Sharjah Bus Wraps (6 buses, city-wide)", photo: PHOTO_SHARJAH_BUS, detail: "6 full-wrap buses · MAG · 6 weeks · not a fixed location - pin marks Sharjah city centre", color: PURPLE, group: "Bus Shelters", big: true, emphasize: true, toggleRoute: "bus" },
-  { lat: 25.3545, lng: 55.3875, name: "Sharjah Taxi Wraps (50 taxis, city-wide)", photo: PHOTO_SHARJAH_TAXI, detail: "50 taxis · MAG · 4 weeks · added value, free of charge · not a fixed location - pin marks Sharjah city centre", color: PURPLE, group: "Sharjah", big: true, emphasize: true, toggleRoute: "taxi" },
+  { lat: 25.3600, lng: 55.3940, name: "Sharjah Bus Wraps (6 buses, city-wide)", photo: PHOTO_SHARJAH_BUS, detail: "6 full-wrap buses · Red Dot · 6 weeks · not a fixed location - pin marks Sharjah city centre", color: BLUE, group: "Bus Shelters", big: true, emphasize: true, toggleRoute: "bus" },
+  { lat: 25.3545, lng: 55.3875, name: "Sharjah Taxi Wraps (50 taxis, city-wide)", photo: PHOTO_SHARJAH_TAXI, detail: "50 taxis · Red Dot · 4 weeks · added value, free of charge · not a fixed location - pin marks Sharjah city centre", color: PURPLE, group: "Taxis", big: true, emphasize: true, toggleRoute: "taxi" },
 
   // AIRPORT (big) - ORANGE
-  { lat: 25.3286, lng: 55.5172, name: "Sharjah International Airport", photo: PHOTO_SHARJAH_AIRPORT, detail: "60 digital screens · MAG · 6 weeks · TBC spot duration · approx. location", color: ORANGE, group: "Airport", big: true, emphasize: true },
+  { lat: 25.3286, lng: 55.5172, name: "Sharjah International Airport", photo: PHOTO_SHARJAH_AIRPORT, detail: "60 digital screens · Red Dot · 6 weeks · TBC spot duration · approx. location", color: ORANGE, group: "Airport", big: true, emphasize: true },
 ];
 
 const cardsEl = document.getElementById('cards');
@@ -345,7 +346,7 @@ const cardGroupSummaries = {
   }
 };
 
-const groups = ["Hoardings / Billboards", "Metro", "Bus Shelters", "Sharjah", "Airport"];
+const groups = ["Hoardings / Megapoles", "Metro", "Bus Shelters", "Taxis", "Airport"];
 groups.forEach(g => {
   const groupPlaces = places.filter(p => p.group === g);
   if (groupPlaces.length === 0) return;
@@ -356,7 +357,9 @@ groups.forEach(g => {
   groupPlaces.forEach(item => {
     const size = 20;
     const marker = L.marker([item.lat, item.lng], { icon: starIcon(item.color, size, !!item.emphasize) }).addTo(map);
-    marker.bindTooltip(`<b>${item.group}</b><br>${item.name}`, { direction: 'top', offset: [0,-14] });
+    // Hover shows the photo too (same picture as the click popup)
+    const tipPhoto = item.photo ? `<img src="${item.photo}" style="width:100%;border-radius:6px;margin-bottom:6px;display:block;"/>` : '';
+    marker.bindTooltip(`<div style="width:230px;">${tipPhoto}<b>${item.group}</b><br>${item.name}</div>`, { direction: 'auto', offset: [12, 0] });
     if (item.toggleRoute === "bus") marker.on('click', () => toggleSharjahBusRoute());
     if (item.toggleRoute === "taxi") marker.on('click', () => toggleSharjahTaxiRoute());
     const popupTextHtml = `<div style="font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.3;">${item.group}</div><div style="font-size:14px;color:#444;line-height:1.4;">${item.name}</div>`;
@@ -427,10 +430,10 @@ const sharjahTaxiStands = [
   "Al Nahda|25.3230|55.3700",
 ];
 const sharjahBusRouteLayer = L.layerGroup([
-  L.polyline(route7Points, { color: '#00695C', weight: 4, opacity: 0.85, interactive: false }).bindTooltip("Route 7 - Al Mamzar to the central terminal via the lagoons (traced from the RTA map, approx.)", { permanent: false }),
-  L.polyline(route8Points, { color: '#29B6F6', weight: 4, opacity: 0.85, interactive: false }).bindTooltip("Route 8 - Al Nahda to the central terminal along Al Wahda St (traced from the RTA map, approx.)", { permanent: false }),
-  L.polyline(route88Points, { color: '#FDD835', weight: 4, opacity: 0.85, interactive: false }).bindTooltip("Route 88 - central terminal via Al Nasseriya and Al Mansura to Al Saja'a (traced from the RTA map, approx.)", { permanent: false }),
-  L.polyline(route99Points, { color: '#2078FF', weight: 4, opacity: 0.85, interactive: false }).bindTooltip("Route 99 - central terminal via Al Nasseriya and Al Falaj to Sharjah Airport (traced from the RTA map, approx.)", { permanent: false }),
+  L.polyline(route7Points, { color: '#00695C', weight: 4, opacity: 0.85, interactive: true }).bindTooltip("Route 7 - Al Mamzar to the central terminal via the lagoons (traced from the RTA map, approx.)", { permanent: false }),
+  L.polyline(route8Points, { color: '#29B6F6', weight: 4, opacity: 0.85, interactive: true }).bindTooltip("Route 8 - Al Nahda to the central terminal along Al Wahda St (traced from the RTA map, approx.)", { permanent: false }),
+  L.polyline(route88Points, { color: '#FDD835', weight: 4, opacity: 0.85, interactive: true }).bindTooltip("Route 88 - central terminal via Al Nasseriya and Al Mansura to Al Saja'a (traced from the RTA map, approx.)", { permanent: false }),
+  L.polyline(route99Points, { color: '#2078FF', weight: 4, opacity: 0.85, interactive: true }).bindTooltip("Route 99 - central terminal via Al Nasseriya and Al Falaj to Sharjah Airport (traced from the RTA map, approx.)", { permanent: false }),
 ]);
 const sharjahTaxiRouteLayer = L.layerGroup();
 sharjahTaxiStands.forEach(entry => {
@@ -439,10 +442,28 @@ sharjahTaxiStands.forEach(entry => {
   marker.bindTooltip(`<b>Taxi Stand (illustrative)</b><br>${name}`, { direction: 'top', offset: [0,-6] });
   marker.addTo(sharjahTaxiRouteLayer);
 });
+const sharjahBusTerminals = [
+  ["Central terminal (Al Mussalla / Al Jubail)", "Routes 7, 8, 88, 99", 25.36000, 55.39050],
+  ["Al Mamzar / Al Nahda terminal", "Routes 7, 8", 25.30128, 55.36692],
+  ["Sharjah Airport terminal", "Routes 88, 99", 25.32180, 55.51700],
+  ["Al Saja'a terminal", "Route 88", 25.31188, 55.55614]
+];
+// Bus terminals are the stops: small ringed markers, like the Metro stations. (No stop-by-stop
+// data is available, so only the RTA map's terminals are marked; the blue stars are our shelters.)
+const sharjahBusStopMarkers = sharjahBusTerminals.map(([name, routes, lat, lng]) =>
+  L.circleMarker([lat, lng], { radius: 6, color: '#1F2937', weight: 2.5, fillColor: '#ffffff', fillOpacity: 1 })
+    .bindTooltip(`<b>Bus terminal</b><br>${name}<br><span style="color:#777;">${routes}</span>`, { direction: 'top', offset: [0, -4] })
+);
+// Routes are always on (like the Metro lines); clicking a route, or the Bus Wraps card or pin, lights them up.
+let sharjahBusRoutesLit = false;
 function toggleSharjahBusRoute() {
-  if (map.hasLayer(sharjahBusRouteLayer)) { map.removeLayer(sharjahBusRouteLayer); }
-  else { sharjahBusRouteLayer.addTo(map); }
+  sharjahBusRoutesLit = !sharjahBusRoutesLit;
+  sharjahBusRouteLayer.eachLayer(l => { if (l.setStyle) l.setStyle(sharjahBusRoutesLit ? { weight: 8, opacity: 1 } : { weight: 4, opacity: 0.85 }); });
+  sharjahBusStopMarkers.forEach(m => m.setStyle(sharjahBusRoutesLit ? { radius: 9, weight: 3 } : { radius: 6, weight: 2.5 }));
 }
+sharjahBusRouteLayer.addTo(map);
+sharjahBusRouteLayer.eachLayer(l => l.on('click', toggleSharjahBusRoute));
+sharjahBusStopMarkers.forEach(m => m.addTo(map));
 function toggleSharjahTaxiRoute() {
   if (map.hasLayer(sharjahTaxiRouteLayer)) { map.removeLayer(sharjahTaxiRouteLayer); }
   else { sharjahTaxiRouteLayer.addTo(map); }
